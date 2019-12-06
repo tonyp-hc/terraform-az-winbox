@@ -7,32 +7,13 @@ variable "location" {
   default = "East US"
 }
 
-variable "windows_dns_prefix" {
-  description = "DNS prefix to add to to public IP address for Windows VM"
-  default = "ttpdemo"
-}
-
-variable "admin_password" {
-  description = "admin password for Windows VM"
-  default = "pTFE1234!"
-}
-
-module "windowsserver" {
-  source              = "Azure/compute/azurerm"
-  version             = "1.1.5"
-  location            = "${var.location}"
-  resource_group_name = "${var.windows_dns_prefix}-rg"
-  vm_hostname         = "demo-winbox"
-  admin_password      = "${var.admin_password}"
-  vm_os_simple        = "WindowsServer"
-  public_ip_dns       = ["${var.windows_dns_prefix}"]
-  vnet_subnet_id      = "${module.network.vnet_subnets[0]}"
+variable "prefix" {
+  default = "ttp-demo-ado"
 }
 
 module "network" {
   source              = "Azure/network/azurerm"
-  version             = "1.1.1"
-  location            = "${var.location}"
-  resource_group_name = "${var.windows_dns_prefix}-rg"
-  allow_ssh_traffic   = true
+  version             = "2.0.0"
+  location            = var.location
+  resource_group_name = "${var.prefix}-rg"
 }
